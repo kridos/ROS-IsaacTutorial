@@ -1,0 +1,10 @@
+# Sets non-default parameter values for configurable_talker.py.
+#
+# The top-level key MUST match the node's name exactly (see DEEP_DIVE.md)
+# — this file only applies to a node actually named "configurable_talker".
+configurable_talker:
+  ros__parameters:
+    # Written as 2.0, not 2, on purpose — see DEEP_DIVE.md's common
+    # pitfall section on YAML integer/double type mismatches.
+    publish_rate_hz: 2.0
+    message_text: "Configured from YAML"
