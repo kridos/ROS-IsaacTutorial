@@ -1,0 +1,47 @@
+<!--
+  simple_arm.xml: a 2-joint arm in MJCF, conceptually the same idea as
+  Chapter 5's simple_arm.urdf.xacro (base -> link1 -> link2), written
+  directly in MuJoCo's own format rather than converted from URDF (see
+  DEEP_DIVE.md for why).
+-->
+<mujoco model="simple_arm">
+  <!-- timestep: how much simulated time mj_step() advances per call —
+       0.002s (500 Hz) is a common default balancing accuracy and speed
+       for a simple rigid-body system like this one. -->
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+
+  <worldbody>
+    <!-- Ground plane, purely visual/collision reference here — this
+       demo's arm is fixed to the world, not resting on the ground. -->
+    <geom name="floor" type="plane" size="1 1 0.1" rgba="0.6 0.6 0.6 1"/>
+
+    <!-- base: fixed to the world (no joint), matching Chapter 5's
+       base_link being the root of the kinematic tree. -->
+    <body name="base" pos="0 0 0.05">
+      <geom type="cylinder" size="0.05 0.025" rgba="0.5 0.5 0.5 1"/>
+
+      <!-- link1: hinge joint around Z, same role as Chapter 5's
+         joint1 (yaw at the base). -->
+      <body name="link1" pos="0 0 0.025">
+        <joint name="joint1" type="hinge" axis="0 0 1" range="-180 180"/>
+        <geom type="box" size="0.03 0.03 0.15" pos="0 0 0.15" rgba="0.2 0.2 0.8 1"/>
+        <inertial pos="0 0 0.15" mass="0.5" diaginertia="0.01 0.01 0.005"/>
+
+        <!-- link2: hinge joint around Y, same role as Chapter 5's
+           joint2 (elbow pitch), positioned at the end of link1. -->
+        <body name="link2" pos="0 0 0.3">
+          <joint name="joint2" type="hinge" axis="0 1 0" range="-115 115"/>
+          <geom type="box" size="0.025 0.025 0.125" pos="0 0 0.125" rgba="0.2 0.8 0.2 1"/>
+          <inertial pos="0 0 0.125" mass="0.35" diaginertia="0.005 0.005 0.002"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <!-- actuator: lets run_sim.py drive each joint with a torque command
+       via data.ctrl, rather than only observing passive dynamics. -->
+  <actuator>
+    <motor name="joint1_motor" joint="joint1" gear="1" ctrlrange="-5 5"/>
+    <motor name="joint2_motor" joint="joint2" gear="1" ctrlrange="-5 5"/>
+  </actuator>
+</mujoco>
