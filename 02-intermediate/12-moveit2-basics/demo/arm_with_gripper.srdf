@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+  arm_with_gripper.srdf: companion to arm_with_gripper.urdf.xacro,
+  defining the "arm" planning group (joint1-3), a named "home" state, and
+  disabled self-collision pairs for links that always touch at their
+  shared joint (see DEEP_DIVE.md).
+-->
+<robot name="arm_with_gripper">
+
+  <!-- The planning group MoveGroupInterface("arm", ...) refers to by
+       name in move_to_pose.py. joints lists every joint MoveIt2 is
+       allowed to move when planning for this group; the fixed
+       gripper_joint is intentionally NOT listed here since it can't
+       move. -->
+  <group name="arm">
+    <joint name="joint1"/>
+    <joint name="joint2"/>
+    <joint name="joint3"/>
+  </group>
+
+  <!-- A named configuration ("home") the demo could request instead of
+       a pose target — all zero angles, i.e. the arm's default/rest URDF
+       configuration. -->
+  <group_state name="home" group="arm">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0"/>
+    <joint name="joint3" value="0"/>
+  </group_state>
+
+  <!-- Adjacent links along the kinematic chain always overlap slightly
+       right at their shared joint — this isn't a real collision, so we
+       tell the self-collision checker to ignore these specific pairs
+       rather than have it constantly (and uselessly) flag them. -->
+  <disable_collisions link1="base_link" link2="link1" reason="Adjacent"/>
+  <disable_collisions link1="link1" link2="link2" reason="Adjacent"/>
+  <disable_collisions link1="link2" link2="link3" reason="Adjacent"/>
+  <disable_collisions link1="link3" link2="gripper" reason="Adjacent"/>
+
+</robot>
