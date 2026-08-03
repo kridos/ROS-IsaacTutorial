@@ -1,0 +1,19 @@
+# Runs talker and listener in separate containers, both built from the
+# same image (Dockerfile), on host networking — see DEEP_DIVE.md's
+# common pitfall for why network_mode: host is required here: Docker's
+# default bridge network doesn't pass through the multicast traffic DDS
+# discovery relies on, so without this, both containers would start
+# successfully and simply never find each other.
+
+services:
+  talker:
+    build: .
+    container_name: chatter_talker
+    network_mode: host
+    command: ["python3", "talker.py"]
+
+  listener:
+    build: .
+    container_name: chatter_listener
+    network_mode: host
+    command: ["python3", "listener.py"]
