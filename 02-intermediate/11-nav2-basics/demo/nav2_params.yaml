@@ -1,0 +1,118 @@
+# Minimal Nav2 parameter file for the Chapter 9 sensored_diffdrive robot.
+#
+# Trimmed to what's needed for this demo to run and be tunable — a
+# production Nav2 config has many more parameters with sane built-in
+# defaults; see the Nav2 documentation for the full reference once you're
+# tuning navigation for a real robot rather than learning the basics.
+
+amcl:
+  ros__parameters:
+    use_sim_time: true
+    scan_topic: scan
+    # Broad initial spread since we don't know exactly where in the map
+    # the robot starts — narrows down as the particle filter converges
+    # once /initialpose is published (see DEEP_DIVE.md).
+    min_particles: 500
+    max_particles: 2000
+    laser_max_range: 12.0
+    base_frame_id: base_link
+    odom_frame_id: odom
+    global_frame_id: map
+
+controller_server:
+  ros__parameters:
+    use_sim_time: true
+    controller_frequency: 10.0
+    min_x_velocity_threshold: 0.001
+    min_theta_velocity_threshold: 0.001
+    controller_plugins: ["FollowPath"]
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+      max_vel_x: 0.3
+      max_vel_theta: 1.0
+      min_vel_x: 0.0
+      acc_lim_x: 1.0
+      acc_lim_theta: 2.0
+      xy_goal_tolerance: 0.15
+      yaw_goal_tolerance: 0.2
+
+planner_server:
+  ros__parameters:
+    use_sim_time: true
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner::NavfnPlanner"
+      tolerance: 0.2
+
+# robot_radius here (0.15m) is deliberately a bit larger than the
+# chassis's actual half-width (0.1m, from Chapter 9's chassis_width=0.2)
+# to leave a safety margin — see DEEP_DIVE.md's inflation pitfall for
+# what happens if this is set wrong in either direction.
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      use_sim_time: true
+      global_frame: odom
+      robot_base_frame: base_link
+      width: 3
+      height: 3
+      resolution: 0.05
+      robot_radius: 0.15
+      plugins: ["obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: scan
+        scan:
+          topic: scan
+          data_type: "LaserScan"
+          marking: true
+          clearing: true
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.3
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      use_sim_time: true
+      global_frame: map
+      robot_base_frame: base_link
+      resolution: 0.05
+      robot_radius: 0.15
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_topic: /map
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: scan
+        scan:
+          topic: scan
+          data_type: "LaserScan"
+          marking: true
+          clearing: true
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.3
+
+map_server:
+  ros__parameters:
+    use_sim_time: true
+    yaml_filename: "empty_map.yaml"
+
+bt_navigator:
+  ros__parameters:
+    use_sim_time: true
+    global_frame: map
+    robot_base_frame: base_link
+
+lifecycle_manager_navigation:
+  ros__parameters:
+    use_sim_time: true
+    autostart: true
+    node_names:
+      - map_server
+      - amcl
+      - controller_server
+      - planner_server
+      - bt_navigator
