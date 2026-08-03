@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  empty_world.sdf: a minimal Gazebo world — ground plane, a light, and the
+  physics/system plugins gz-sim needs to actually simulate anything
+  (without the "physics" system plugin, nothing moves at all, robot
+  included, which is a common surprise for a first hand-written world).
+-->
+<sdf version="1.9">
+  <world name="empty_world">
+
+    <!-- Core simulation systems. Every gz-sim world needs these loaded
+         to do anything beyond rendering a static scene: physics stepping,
+         user command handling (spawning robots at runtime), scene
+         updates for the GUI, and contact/collision detection. -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <gravity>0 0 -9.8</gravity>
+
+  </world>
+</sdf>

@@ -32,7 +32,7 @@ own directory and contains:
 
 ## Curriculum map
 
-### [Tier 1 — Beginner](01-beginner/README.md)
+### [Tier 1 — Beginner](01-beginner/README.md) — complete
 ROS2 fundamentals: nodes, topics, services, actions, parameters, launch
 files, robot description, debugging tools, and your first Gazebo
 simulation.
@@ -43,7 +43,8 @@ MoveIt2 basics, and your first steps into NVIDIA Isaac Sim.
 
 ### Tier 3 — Advanced (in progress)
 Isaac ROS GPU perception, synthetic data generation, advanced Nav2/MoveIt2,
-multi-robot systems, MuJoCo, and containerized robotics.
+multi-robot systems, MuJoCo, containerized robotics (Docker), and
+orchestrating robot fleets with Kubernetes.
 
 ### Tier 4 — God Mode (in progress)
 Isaac Lab reinforcement learning, sim-to-real transfer, Isaac GR00T
