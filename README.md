@@ -29,6 +29,8 @@ own directory and contains:
 - `DEEP_DIVE.md` — the full technical detail, still explained simply.
 - `demo/` — runnable, heavily-commented code demonstrating the concept,
   with a `demo/README.md` explaining how to run it and what to expect.
+- `PRACTICE.md` — mini-project suggestions for practicing the chapter's
+  skills yourself, beyond just running the demo.
 
 ## Curriculum map
 
