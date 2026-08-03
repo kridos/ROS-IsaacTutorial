@@ -37,7 +37,7 @@ ROS2 fundamentals: nodes, topics, services, actions, parameters, launch
 files, robot description, debugging tools, and your first Gazebo
 simulation.
 
-### Tier 2 — Intermediate (in progress)
+### [Tier 2 — Intermediate](02-intermediate/README.md) — complete
 Transforms, simulated sensors, ROS2 architecture (DDS/QoS), Nav2 and
 MoveIt2 basics, and your first steps into NVIDIA Isaac Sim.
 
