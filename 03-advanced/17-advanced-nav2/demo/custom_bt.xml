@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+  custom_bt.xml: a Nav2 behavior tree built entirely from Nav2's
+  existing, already-registered nodes (see DEEP_DIVE.md — no new compiled
+  plugin needed). Compared to Nav2's stock tree, this one's recovery
+  branch is deliberately more patient: it waits longer and backs up
+  further before retrying, favoring "give the situation more time to
+  resolve itself" over the stock tree's faster-cycling recovery attempts
+  — a reasonable choice for, e.g., a warehouse robot navigating around
+  other slow-moving agents that might just need a few extra seconds to
+  clear a path, rather than an aggressive obstacle.
+
+  Tree shape:
+    RecoveryNode (retries=3)
+      main:     Sequence: ComputePathToPose -> FollowPath
+      recovery: Sequence: Wait (5s) -> BackUp (0.3m) -> ClearEntireCostmap
+-->
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="3" name="NavigateWithPatientRecovery">
+
+      <!-- Main behavior: plan a path, then follow it — same two actions
+           the stock tree uses, just without the stock tree's extra
+           rate-controlled replanning wrapper, kept simple for this
+           chapter's demo. -->
+      <Sequence name="ComputeAndFollowPath">
+        <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+        <FollowPath path="{path}" controller_id="FollowPath"/>
+      </Sequence>
+
+      <!-- Recovery behavior: notably more patient than Nav2's stock
+           RoundRobin recovery (which cycles quickly through several
+           short recoveries) — one longer wait, one longer backup, then
+           a costmap clear, before RecoveryNode retries the main branch
+           again (up to number_of_retries times total). -->
+      <Sequence name="PatientRecovery">
+        <Wait wait_duration="5.0"/>
+        <BackUp backup_dist="0.3" backup_speed="0.1"/>
+        <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+      </Sequence>
+
+    </RecoveryNode>
+  </BehaviorTree>
+</root>
