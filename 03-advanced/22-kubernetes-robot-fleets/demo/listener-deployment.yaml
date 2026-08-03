@@ -1,0 +1,25 @@
+# Deploys Chapter 21's listener image as a single-replica Deployment.
+# See talker-deployment.yaml's comment for why hostNetwork: true is
+# required here too.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: listener
+  namespace: ros2-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: listener
+  template:
+    metadata:
+      labels:
+        app: listener
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: listener
+          image: ros2-chatter-demo:latest
+          imagePullPolicy: Never
+          command: ["python3", "listener.py"]

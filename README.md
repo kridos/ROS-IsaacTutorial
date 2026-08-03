@@ -41,7 +41,7 @@ simulation.
 Transforms, simulated sensors, ROS2 architecture (DDS/QoS), Nav2 and
 MoveIt2 basics, and your first steps into NVIDIA Isaac Sim.
 
-### Tier 3 — Advanced (in progress)
+### [Tier 3 — Advanced](03-advanced/README.md) — complete
 Isaac ROS GPU perception, synthetic data generation, advanced Nav2/MoveIt2,
 multi-robot systems, MuJoCo, containerized robotics (Docker), and
 orchestrating robot fleets with Kubernetes.

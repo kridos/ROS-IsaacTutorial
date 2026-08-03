@@ -1,0 +1,34 @@
+# Deploys Chapter 21's talker image as a single-replica Deployment.
+#
+# hostNetwork: true is the Kubernetes equivalent of Chapter 21's
+# docker-compose "network_mode: host" — required for the same reason
+# (see DEEP_DIVE.md): without it, this Pod's DDS discovery traffic
+# wouldn't reach listener-deployment.yaml's Pod across the cluster's
+# default pod networking, the same multicast-doesn't-pass-through
+# problem from Chapter 21's Docker networking, one layer up.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talker
+  namespace: ros2-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: talker
+  template:
+    metadata:
+      labels:
+        app: talker
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: talker
+          # Built from Chapter 21's demo/Dockerfile — see this chapter's
+          # demo/README.md for the exact build + `kind load docker-image`
+          # commands needed before this image name resolves inside the
+          # cluster.
+          image: ros2-chatter-demo:latest
+          imagePullPolicy: Never
+          command: ["python3", "talker.py"]

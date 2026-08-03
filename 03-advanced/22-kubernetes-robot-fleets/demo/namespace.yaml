@@ -1,0 +1,8 @@
+# Groups this chapter's demo resources under their own Kubernetes
+# namespace — purely for tidiness (kubectl get pods -n ros2-demo shows
+# only this demo's Pods), unrelated to ROS2's own namespacing concept
+# from Chapter 19 (see DEEP_DIVE.md).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ros2-demo
