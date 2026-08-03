@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!--
+  simple_arm.urdf.xacro: a minimal 2-revolute-joint arm.
+
+  Chain: base_link, then joint1 (revolute, Z axis) to link1, then
+  joint2 (revolute, Y axis) to link2.
+
+  Each link is a plain box. Inertial values are rough placeholders (fine
+  for RViz visualization in this chapter; Chapter 7's Gazebo demo needs
+  more care since physics actually uses these numbers).
+-->
+<robot name="simple_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Xacro properties: named constants, referenced below with ${...}.
+       Changing a length here updates every place that uses it, instead
+       of hunting down repeated literal numbers. -->
+  <xacro:property name="link1_length" value="0.3"/>
+  <xacro:property name="link2_length" value="0.25"/>
+  <xacro:property name="link_radius" value="0.03"/>
+  <xacro:property name="link_mass" value="0.5"/>
+
+  <!-- base_link: the root of the kinematic tree. Every other link
+       traces back to this one through a chain of joints. -->
+  <link name="base_link">
+    <visual>
+      <geometry><cylinder radius="0.05" length="0.05"/></geometry>
+      <material name="gray"><color rgba="0.5 0.5 0.5 1"/></material>
+    </visual>
+    <collision>
+      <geometry><cylinder radius="0.05" length="0.05"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+  </link>
+
+  <link name="link1">
+    <visual>
+      <!-- Offset the visual geometry so the box extends outward from the
+           joint origin rather than being centered on it — otherwise half
+           the link would visually overlap its parent. -->
+      <origin xyz="0 0 ${link1_length/2}" rpy="0 0 0"/>
+      <geometry><box size="${link_radius*2} ${link_radius*2} ${link1_length}"/></geometry>
+      <material name="blue"><color rgba="0.2 0.2 0.8 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${link1_length/2}" rpy="0 0 0"/>
+      <geometry><box size="${link_radius*2} ${link_radius*2} ${link1_length}"/></geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 ${link1_length/2}" rpy="0 0 0"/>
+      <mass value="${link_mass}"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.005"/>
+    </inertial>
+  </link>
+
+  <!-- joint1: connects base_link -> link1, rotates around Z (yaw at the
+       base — like a turntable the rest of the arm sits on). -->
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.14159" upper="3.14159" effort="10.0" velocity="1.0"/>
+  </joint>
+
+  <link name="link2">
+    <visual>
+      <origin xyz="0 0 ${link2_length/2}" rpy="0 0 0"/>
+      <geometry><box size="${link_radius*2} ${link_radius*2} ${link2_length}"/></geometry>
+      <material name="green"><color rgba="0.2 0.8 0.2 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${link2_length/2}" rpy="0 0 0"/>
+      <geometry><box size="${link_radius*2} ${link_radius*2} ${link2_length}"/></geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 ${link2_length/2}" rpy="0 0 0"/>
+      <mass value="${link_mass * 0.7}"/>
+      <inertia ixx="0.005" ixy="0" ixz="0" iyy="0.005" iyz="0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- joint2: connects link1 -> link2, rotates around Y (pitch — like an
+       elbow), positioned at the far end of link1 (hence the Z offset
+       equal to link1_length). -->
+  <joint name="joint2" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 0 ${link1_length}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.0" upper="2.0" effort="10.0" velocity="1.0"/>
+  </joint>
+
+</robot>
