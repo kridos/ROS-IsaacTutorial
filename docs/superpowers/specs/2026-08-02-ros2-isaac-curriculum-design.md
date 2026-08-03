@@ -92,14 +92,16 @@ tool differs in C++ without a full parallel demo.
 19. Multi-robot systems
 20. MuJoCo (fast physics/RL-style sim, compared to Gazebo/Isaac)
 21. Containerized robotics (Docker for reproducible dev/deploy)
+22. Orchestrating robot fleets with Kubernetes (multi-robot/multi-service
+    deployment, building on the Docker images from Ch21)
 
 **04-godmode**
-22. Isaac Lab fundamentals (RL environments for robots)
-23. Training a locomotion/manipulation policy in Isaac Lab
-24. Sim-to-real transfer techniques
-25. Isaac GR00T foundation models
-26. GPU-accelerated custom perception (TensorRT pipelines) — Python + C++
-27. Capstone: autonomous mobile manipulator (integrates nav, manipulation,
+23. Isaac Lab fundamentals (RL environments for robots)
+24. Training a locomotion/manipulation policy in Isaac Lab
+25. Sim-to-real transfer techniques
+26. Isaac GR00T foundation models
+27. GPU-accelerated custom perception (TensorRT pipelines) — Python + C++
+28. Capstone: autonomous mobile manipulator (integrates nav, manipulation,
     perception, and sim built up across all prior chapters)
 
 ## Root-Level Files
