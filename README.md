@@ -46,10 +46,16 @@ Isaac ROS GPU perception, synthetic data generation, advanced Nav2/MoveIt2,
 multi-robot systems, MuJoCo, containerized robotics (Docker), and
 orchestrating robot fleets with Kubernetes.
 
-### Tier 4 — God Mode (in progress)
+### [Tier 4 — God Mode](04-godmode/README.md) — complete
 Isaac Lab reinforcement learning, sim-to-real transfer, Isaac GR00T
 foundation models, GPU-accelerated custom perception, and a capstone
 project tying it all together.
+
+---
+
+**The curriculum is complete — all 28 chapters, across all 4 tiers.**
+Start at Chapter 1 if you're new, or jump to any tier if you already have
+the prerequisites for it.
 
 ## Design notes
 
